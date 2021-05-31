@@ -13,18 +13,25 @@ df = pd.DataFrame(cancer_data['data'], columns = cancer_data['feature_names'])
 df['target'] = cancer_data['target']
 
 # numpyarrays
-X = df[cancer_data.feature_names].values
-y = df['target'].values
+XLR = df[cancer_data.feature_names].values
+YLR = df['target'].values
 
 # creating model
 model = LogisticRegression(solver='liblinear')
-model.fit(X, y)
+model.fit(XLR, YLR)
 
-# print(model.predict_proba(X))
-
-acc = model.score(X, y)
+acc = model.score(XLR, YLR)
 print("We get a score of " + str(acc) + "%")
 
-# plt.scatter()
-# plt.show()
+prediction = model.predict_proba(XLR)[:,1]
+
+plt.figure(figsize=(15,8))
+plt.hist(prediction[YLR==0], bins=20, label='Negatives')
+plt.hist(prediction[YLR==1], bins=20, label='Positives', alpha=0.7, color='r')
+plt.xlabel('Probability of Cancer', fontsize=25)
+plt.ylabel('Trials', fontsize=25)
+plt.legend(fontsize=15)
+plt.tick_params(axis='both', labelsize=25, pad=5)
+
+plt.show()
 
